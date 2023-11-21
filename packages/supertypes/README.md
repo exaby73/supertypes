@@ -61,9 +61,9 @@ typedef _$Example = ();
 
 # Index
 
-- [Modifier types][#modifier-types]
-  - [Partial][#partial]
-  - [Required][#required]
+- [Modifier types](#modifier-types)
+  - [Partial](#partial)
+  - [Required](#required)
 
 ## Modifier types
 
