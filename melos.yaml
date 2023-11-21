@@ -1,0 +1,5 @@
+name: supertypes
+
+packages:
+  - packages/*
+

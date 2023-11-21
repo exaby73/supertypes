@@ -1,0 +1,7 @@
+builders:
+  supertypes:
+    import: "package:supertypes_generator/builder.dart"
+    builder_factories: [ "supertypesBuilder" ]
+    build_extensions: { ".dart": [ ".supertypes.dart" ] }
+    auto_apply: root_package
+    build_to: source

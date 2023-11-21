@@ -1,0 +1,4 @@
+.dart_tool
+.idea
+melos_supertypes.iml
+pubspec.lock
