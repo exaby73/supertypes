@@ -10,8 +10,7 @@ dependencies:
   analyzer: ^6.3.0
   build: ^2.4.1
   source_gen: ^1.4.0
-  supertypes:
-    path: ../supertypes
+  supertypes: ^0.0.1
 
 dev_dependencies:
   lint: ^2.2.0
