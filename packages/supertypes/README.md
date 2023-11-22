@@ -64,6 +64,11 @@ typedef _$Example = ();
 - [Modifier types](#modifier-types)
   - [Partial](#partial)
   - [Required](#required)
+  - [Omit](#omit)
+    - [Omitting positional fields](#omitting-positional-fields)
+  - [Pick](#pick)
+    - [Picking positional fields](#picking-positional-fields)
+- [Using Supertypes within another Supertype](#using-supertypes-within-another-supertype)
 
 ## Modifier types
 
@@ -79,9 +84,9 @@ import 'package:supertypes/supertypes.dart';
 part 'person.supertypes.dart';
 
 typedef Person = ({
-String firstName,
-String lastName,
-int age,
+  String firstName,
+  String lastName,
+  int age,
 });
 
 // We want to make all the field nullable to support partial updates
@@ -90,9 +95,9 @@ typedef $UpdatePerson = Partial<Person>;
 
 // This generates:
 typedef UpdatePerson = ({
-String? firstName,
-String? lastName,
-int? age,
+  String? firstName,
+  String? lastName,
+  int? age,
 });
 ```
 
@@ -109,9 +114,9 @@ part 'person.supertypes.dart';
 // and we can't update the type easily. 
 // We can instead create a new type with all fields required.
 typedef Person = ({
-String firstName,
-String? lastName,
-int age,
+  String firstName,
+  String? lastName,
+  int age,
 });
 
 // We want to make all the field nullable to support partial updates
@@ -120,24 +125,217 @@ typedef $CreatePerson = Required<Person>;
 
 // This generates:
 typedef CreatePerson = ({
-String firstName,
-String lastName,
-int age,
+  String firstName,
+  String lastName,
+  int age,
 });
 ```
 
-# Future features:
+### Omit
 
-- [ ] More modifier types
-  - [ ] `Omit` - Omit fields from a type
-  - [ ] `Pick` - Pick fields from a type
-  - [ ] `Awaited` - Unwrap a `Future` type recursively
-  - [ ] `WithRequired` - Make certain fields required
-  - [ ] `WithPartial` - Make certain fields optional
-  - [ ] `Intersect` - Intersect two types
-- [ ] JSON serialization and deserialization for records
-  - [ ] Generate `fromJson` top level function
-  - [ ] Generate `toJson` extension method on the record
-- [ ] Support for using classes in the supertype records by extracting their fields
+The `Omit` modifier type takes a type and a list of fields to omit from the type.
+
+```dart
+import 'package:supertypes/supertypes.dart';
+
+part 'person.supertypes.dart';
+
+typedef Person = ({
+  String firstName,
+  String lastName,
+  int age,
+});
+
+// We want to remove age from the type
+@superType
+typedef $PersonWithoutAge = Omit<Person, ({Omit age})>;
+
+// This generates:
+
+/// Generate for [$PersonWithoutAge]
+typedef PersonWithoutAge = ({
+  String firstName,
+  String lastName,
+});
+```
+
+#### Omitting positional fields
+
+It's possible to also omit a positional field. For example:
+
+```dart
+typedef Person = (String name, int age);
+
+// We want to remove the x field from the type
+@superType
+typedef $Age = Omit<Person, (Omit,)>; // This removes the first positional field
+
+// This removes the second positional field. 
+// We use `Pick` as a placeholder for the first positional field.
+@superType
+typedef $Name = Omit<Person, (Pick, Omit)>; 
+
+// This generates:
+
+/// Generate for [$Age]
+typedef Age = (int,);
+
+/// Generate for [$Name]
+typedef Name = (String,);
+```
+
+### Pick
+
+The `Pick` modifier type takes a type and a list of fields to pick from the type and ignores the rest.
+
+```dart
+import 'package:supertypes/supertypes.dart';
+
+part 'person.supertypes.dart';
+
+typedef Person = ({
+  String firstName,
+  String lastName,
+  int age,
+});
+
+// We want to remove age from the type
+@superType
+typedef $PersonWithoutAge = Pick<Person, ({Pick firstName, Pick lastName})>;
+
+// This generates:
+
+/// Generate for [$PersonWithoutAge]
+typedef PersonWithoutAge = ({
+  String firstName,
+  String lastName,
+});
+```
+
+You can also apply a modifier type to the fields you pick:
+
+```dart
+import 'package:supertypes/supertypes.dart';
+
+part 'person.supertypes.dart';
+
+typedef Person = ({
+  String? firstName,
+  String? lastName,
+  int age,
+});
+
+// Let's make age nullable and and pick firstName as a required field
+@superType
+typedef $PersonWithNullableAge = Pick<Person, ({Required firstName, Partial age})>;
+
+// This generates:
+
+/// Generate for [$PersonWithNullableAge]
+typedef PersonWithNullableAge = ({
+  int? age,
+  String firstName,
+});
+```
+
+#### Picking positional fields
+
+It's possible to also pick a positional field. For example:
+
+```dart
+typedef Person = (String name, int age);
+
+// We want to remove the x field from the type
+@superType
+typedef $Name = Pick<Person, (Pick,)>; // This removes the first positional field
+
+// This removes the second positional field. 
+// We use `Pick` as a placeholder for the first positional field.
+@superType
+typedef $Age = Pick<Person, (Omit, Pick)>; 
+
+// This generates:
+
+/// Generate for [$Name]
+typedef Name = (String,);
+
+/// Generate for [$Age]
+typedef Age = (int,);
+```
+
+# Using Supertypes within another Supertype
+
+Supertypes can be used within other supertypes. This is useful for creating complex types that can be reused.
+To use a supertype within another supertype, simply use the original type you prefixed with `$` or `_$`.
+
+```dart
+import 'package:supertypes/supertypes.dart';
+
+part 'person.supertypes.dart';
+
+typedef Person = ({
+  String firstName,
+  String lastName,
+  int age,
+});
+
+@superType
+typedef $CreatePerson = Required<Person>;
+
+@superType
+typedef $UpdatePerson = Partial<Person>;
+
+@superType
+typedef $PersonOperation = ({
+  $CreatePerson create,
+  $UpdatePerson update,
+});
+
+// This generates:
+
+/// Generate for [$CreatePerson]
+typedef CreatePerson = ({
+  int age,
+  String firstName,
+  String lastName,
+});
+
+/// Generate for [$UpdatePerson]
+typedef UpdatePerson = ({
+  int? age,
+  String? firstName,
+  String? lastName,
+});
+
+/// Generate for [$PersonOperation]
+typedef PersonOperation = ({
+  ({
+    int age,
+    String firstName,
+    String lastName,
+  }) create,
+  ({
+    int? age,
+    String? firstName,
+    String? lastName,
+  }) update,
+});
+```
+
+# Features:
+
+- More modifier types
+  - ✅ `Partial` - Make all fields nullable
+  - ✅ `Required` - Make all fields required
+  - ✅ `Omit` - Omit fields from a type
+  - ✅ `Pick` - Pick fields from a type
+  - `Merge` - Merge two types
+  - `WithRequired` - Make certain fields required
+  - `WithPartial` - Make certain fields optional
+  - `Awaited` - Unwrap a `Future` type recursively
+- JSON serialization and deserialization for records
+  - Generate `fromJson` top level function
+  - Generate `toJson` extension method on the record
+- Support for using classes in the supertype records by extracting their fields
 
 [ts-utility-types]: https://www.typescriptlang.org/docs/handbook/utility-types.html

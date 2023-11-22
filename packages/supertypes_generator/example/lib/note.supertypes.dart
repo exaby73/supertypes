@@ -13,11 +13,4 @@ typedef UpdateNoteDto = ({
   int? id,
   String? title,
   DateTime? updatedAt,
-  ({
-    DateTime createdAt,
-    String email,
-    int id,
-    String name,
-    DateTime updatedAt
-  })? user,
 });

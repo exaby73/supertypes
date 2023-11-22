@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:analyzer/dart/element/type.dart';
 import 'package:supertypes_generator/generator.dart';
 import 'package:supertypes_generator/src/field_definition.dart';
@@ -9,16 +11,17 @@ void applyPick(
 ) {
   final children = field.children;
   final picks = field.restTypes!.first as RecordType;
-
+  
   if (children == null) {
     final def = generate(field.type, definition);
 
     final positionalFields = def.positionalFields.toList();
     for (int i = 0; i < positionalFields.length; i++) {
-      if (picks.positionalFields.length <= i) {
-        break;
+      if (i >= picks.positionalFields.length) {
+        def.fields.removeAt(i);
+        continue;
       }
-
+      
       final pickField = picks.positionalFields[i];
       if (pickField.type.element?.name == 'Required') {
         positionalFields[i].isNullable = false;
