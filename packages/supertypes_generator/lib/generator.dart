@@ -5,7 +5,9 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:supertypes/supertypes.dart';
 import 'package:supertypes_generator/src/field_definition.dart';
+import 'package:supertypes_generator/src/modifiers/omit.dart';
 import 'package:supertypes_generator/src/modifiers/partial.dart';
+import 'package:supertypes_generator/src/modifiers/pick.dart';
 import 'package:supertypes_generator/src/modifiers/required.dart';
 import 'package:supertypes_generator/src/super_type_definition.dart';
 import 'package:supertypes_generator/src/utils/records.dart';
@@ -68,6 +70,7 @@ SuperTypeDefinition generate(
   // This is used as a wrapper type
   final initialDefinition = FieldDefinition(
     type: type.typeArguments.first,
+    restTypes: type.typeArguments.skip(1),
     isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
   );
 
@@ -76,6 +79,10 @@ SuperTypeDefinition generate(
       applyPartial(initialDefinition, def);
     case 'Required':
       applyRequired(initialDefinition, def);
+    case 'Omit':
+      applyOmit(initialDefinition, def);
+    case 'Pick':
+      applyPick(initialDefinition, def);
     default:
     // Generic class handling
   }

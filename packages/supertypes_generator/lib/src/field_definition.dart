@@ -3,6 +3,7 @@ import 'package:analyzer/dart/element/type.dart';
 class FieldDefinition {
   String? name;
   DartType type;
+  Iterable<DartType>? restTypes;
   bool isNullable;
 
   Iterable<FieldDefinition>? children;
@@ -10,6 +11,7 @@ class FieldDefinition {
   FieldDefinition({
     this.name,
     required this.type,
+    this.restTypes,
     required this.isNullable,
     this.children,
   });
