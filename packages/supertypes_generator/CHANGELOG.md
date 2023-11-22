@@ -1,3 +1,7 @@
+## 0.0.2
+
+ - **FEAT**(supertypes): add support for Pick and Omit.
+
 ## 0.0.1+1
 
  - Update a dependency to the latest release.
