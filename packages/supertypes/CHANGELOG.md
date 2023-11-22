@@ -1,3 +1,9 @@
+## 0.0.3
+
+ - **FIX**(supertypes): Pick not parsing positional fields properly, update README.
+ - **FIX**(supertypes): README links.
+ - **FEAT**(supertypes): add support for Pick and Omit.
+
 ## 0.0.2
 
  - **FEAT**(supertypes): add support for Pick and Omit.
