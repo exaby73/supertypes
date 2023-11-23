@@ -1,5 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+export 'package:supertypes/src/modifiers/merge.dart' show Merge;
 export 'package:supertypes/src/modifiers/omit.dart' show Omit;
 export 'package:supertypes/src/modifiers/partial.dart' show Partial;
 export 'package:supertypes/src/modifiers/pick.dart' show Pick;

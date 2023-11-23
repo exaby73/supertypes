@@ -2,3 +2,5 @@
 .idea
 melos_supertypes.iml
 pubspec.lock
+.nvim.lua
+.fvm
