@@ -1,6 +1,6 @@
 name: supertypes_generator
 description: Generator for supertypes
-version: 0.0.3
+version: 0.0.4
 repository: https://github.com/exaby73/supertypes/tree/master/packages/supertypes_generator
 
 environment:
@@ -10,7 +10,7 @@ dependencies:
   analyzer: ^6.3.0
   build: ^2.4.1
   source_gen: ^1.4.0
-  supertypes: ^0.0.3
+  supertypes: ^0.0.4
 
 dev_dependencies:
   lint: ^2.2.0

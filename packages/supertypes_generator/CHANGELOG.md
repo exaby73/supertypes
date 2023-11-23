@@ -1,3 +1,7 @@
+## 0.0.4
+
+ - **FEAT**(supertypes_generator): add support for Merge.
+
 ## 0.0.3
 
  - **FIX**(supertypes): Pick not parsing positional fields properly, update README.
