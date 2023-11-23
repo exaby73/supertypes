@@ -5,6 +5,7 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:supertypes/supertypes.dart';
 import 'package:supertypes_generator/src/field_definition.dart';
+import 'package:supertypes_generator/src/modifiers/merge.dart';
 import 'package:supertypes_generator/src/modifiers/omit.dart';
 import 'package:supertypes_generator/src/modifiers/partial.dart';
 import 'package:supertypes_generator/src/modifiers/pick.dart';
@@ -83,6 +84,8 @@ SuperTypeDefinition generate(
       applyOmit(initialDefinition, def);
     case 'Pick':
       applyPick(initialDefinition, def);
+    case 'Merge':
+      applyMerge(initialDefinition, def);
     default:
     // Generic class handling
   }
