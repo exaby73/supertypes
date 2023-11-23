@@ -9,7 +9,8 @@ part of 'note.dart';
 /// Generate for [$UpdateNoteDto]
 typedef UpdateNoteDto = ({
   String? content,
+  DateTime? createdAt,
   int id,
   String? title,
-  double foo,
+  DateTime? updatedAt,
 });

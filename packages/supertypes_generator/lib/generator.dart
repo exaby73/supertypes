@@ -10,6 +10,8 @@ import 'package:supertypes_generator/src/modifiers/omit.dart';
 import 'package:supertypes_generator/src/modifiers/partial.dart';
 import 'package:supertypes_generator/src/modifiers/pick.dart';
 import 'package:supertypes_generator/src/modifiers/required.dart';
+import 'package:supertypes_generator/src/modifiers/with_partial.dart';
+import 'package:supertypes_generator/src/modifiers/with_required.dart';
 import 'package:supertypes_generator/src/super_type_definition.dart';
 import 'package:supertypes_generator/src/utils/records.dart';
 
@@ -86,6 +88,10 @@ SuperTypeDefinition generate(
       applyPick(initialDefinition, def);
     case 'Merge':
       applyMerge(initialDefinition, def);
+    case 'WithPartial':
+      applyWithPartial(initialDefinition, def);
+    case 'WithRequired':
+      applyWithRequired(initialDefinition, def);
     default:
     // Generic class handling
   }

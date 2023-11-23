@@ -11,14 +11,4 @@ typedef Note = ({
 });
 
 @superType
-typedef $UpdateNoteDto = Merge<
-    Omit<
-        Partial<Note>,
-        ({
-          Omit createdAt,
-          Omit updatedAt,
-        })>,
-    ({
-      int id,
-      double foo,
-    })>;
+typedef $UpdateNoteDto = WithRequired<Partial<Note>, ({Required id})>;

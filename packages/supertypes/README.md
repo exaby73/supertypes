@@ -329,9 +329,9 @@ typedef PersonOperation = ({
   - ✅ `Required` - Make all fields required
   - ✅ `Omit` - Omit fields from a type
   - ✅ `Pick` - Pick fields from a type
-  - `Merge` - Merge two types
-  - `WithRequired` - Make certain fields required
-  - `WithPartial` - Make certain fields optional
+  - ✅ `Merge` - Merge two types
+  - ✅ `WithRequired` - Make certain fields required
+  - ✅ `WithPartial` - Make certain fields optional
   - `Awaited` - Unwrap a `Future` type recursively
 - JSON serialization and deserialization for records
   - Generate `fromJson` top level function
