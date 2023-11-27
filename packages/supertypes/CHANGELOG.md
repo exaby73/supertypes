@@ -1,3 +1,8 @@
+## 0.0.5
+
+ - **FEAT**: add support for toJson.
+ - **FEAT**: add support for WithPartial and WithRequired.
+
 ## 0.0.4
 
  - **FEAT**(supertypes): add support for Merge.

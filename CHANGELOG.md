@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-11-27
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`supertypes` - `v0.0.5`](#supertypes---v005)
+ - [`supertypes_generator` - `v0.0.5`](#supertypes_generator---v005)
+
+---
+
+#### `supertypes` - `v0.0.5`
+
+ - **FEAT**: add support for toJson.
+ - **FEAT**: add support for WithPartial and WithRequired.
+
+#### `supertypes_generator` - `v0.0.5`
+
+ - **FEAT**: add support for toJson.
+ - **FEAT**: add support for WithPartial and WithRequired.
+
+
 ## 2023-11-24
 
 ### Changes
