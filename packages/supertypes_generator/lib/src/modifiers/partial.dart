@@ -10,7 +10,7 @@ void applyPartial(
   if (children == null) {
     final def = generate(field.type, definition);
     for (final child in def.fields.toList()) {
-      child.isNullable = true;
+      child.nullabilityOverride = true;
     }
     return;
   }

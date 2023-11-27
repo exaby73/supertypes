@@ -80,7 +80,6 @@ SuperTypeDefinition generate(
   final initialDefinition = FieldDefinition(
     type: type.typeArguments.first,
     restTypes: type.typeArguments.skip(1),
-    isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
   );
 
   switch (type.element.name) {
@@ -131,19 +130,43 @@ String _generateFinalCode(
   buffer.write(');');
 
   if (namedFields.isNotEmpty && hasJson) {
+    // fromJson starts
+
+    buffer.write('\n\n');
+
+    buffer.writeln(
+      '$name ${name}FromJson(Map<String, dynamic> json) {',
+    );
+
+    buffer.writeln('return (');
+
+    for (final field in namedFields) {
+      buffer.writeln(
+        field.generateFromJsonForNamedFields(jsonMapping[field.name]),
+      );
+    }
+
+    buffer.writeln(');');
+
+    buffer.write('}');
+
+    // toJson starts
+
     buffer.write('\n');
     buffer.writeln('extension ${name}Json on $name {');
-    
+
     buffer.writeln('Map<String, dynamic> toJson() {\nreturn {');
-    
+
     for (final field in namedFields) {
-      buffer.writeln(field.generateToJsonForNamedFields(jsonMapping[field.name]));
+      buffer.writeln(
+        field.generateToJsonForNamedFields(jsonMapping[field.name]),
+      );
     }
-    
+
     buffer.writeln('};\n}');
-    
-    buffer.write('}');
   }
+
+  buffer.write('}');
 
   return buffer.toString();
 }

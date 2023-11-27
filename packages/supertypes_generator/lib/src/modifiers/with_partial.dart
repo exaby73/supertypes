@@ -21,7 +21,7 @@ void applyWithPartial(
 
       final child = positionalFields[i];
       if (partial.positionalFields[i].type.element?.name == 'Partial') {
-        child.isNullable = true;
+        child.nullabilityOverride = true;
       }
     }
 
@@ -37,7 +37,7 @@ void applyWithPartial(
       
       if (partial.namedFields[partialIndex].type.element?.name == 'Partial' &&
           partial.namedFields[partialIndex].name == child.name) {
-        child.isNullable = true;
+        child.nullabilityOverride = true;
       }
     }
 

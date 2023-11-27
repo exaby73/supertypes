@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/nullability_suffix.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:supertypes_generator/generator.dart';
 import 'package:supertypes_generator/src/field_definition.dart';
@@ -21,7 +21,6 @@ Iterable<FieldDefinition> getFieldDefinitionsFromRecord(
     if (type.isDartCoreRecord) {
       yield FieldDefinition(
         type: type,
-        isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
         children: getFieldDefinitionsFromRecord(
           type as RecordType,
           definition,
@@ -30,14 +29,10 @@ Iterable<FieldDefinition> getFieldDefinitionsFromRecord(
     } else if (!isCoreType(type) && type is InterfaceType) {
       yield FieldDefinition(
         type: type,
-        isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
         children: generate(type, definition).fields,
       );
     } else {
-      yield FieldDefinition(
-        type: type,
-        isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
-      );
+      yield FieldDefinition(type: type);
     }
   }
 
@@ -47,24 +42,23 @@ Iterable<FieldDefinition> getFieldDefinitionsFromRecord(
       yield FieldDefinition(
         name: param.name,
         type: type,
-        isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
         children: getFieldDefinitionsFromRecord(
           type as RecordType,
           definition,
         ),
       );
-    } else if (!isCoreType(type) && type is InterfaceType) {
+    } else if (!isCoreType(type) &&
+        type is InterfaceType &&
+        type.element is! EnumElement) {
       yield FieldDefinition(
         name: param.name,
         type: type,
-        isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
         children: generate(type, definition).fields,
       );
     } else {
       yield FieldDefinition(
         name: param.name,
         type: type,
-        isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
       );
     }
   }

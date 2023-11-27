@@ -12,7 +12,7 @@ void applyWithRequired(
 
   if (children == null) {
     final def = generate(field.type, definition);
-    
+
     final positionalFields = def.positionalFields.toList();
     for (int i = 0; i < positionalFields.length; i++) {
       if (i >= required.positionalFields.length) {
@@ -21,7 +21,7 @@ void applyWithRequired(
 
       final child = positionalFields[i];
       if (required.positionalFields[i].type.element?.name == 'Required') {
-        child.isNullable = false;
+        child.nullabilityOverride = false;
       }
     }
 
@@ -34,10 +34,11 @@ void applyWithRequired(
       if (requiredIndex == -1) {
         continue;
       }
-      
-      if (required.namedFields[requiredIndex].type.element?.name == 'Required' &&
+
+      if (required.namedFields[requiredIndex].type.element?.name ==
+              'Required' &&
           required.namedFields[requiredIndex].name == child.name) {
-        child.isNullable = false;
+        child.nullabilityOverride = false;
       }
     }
 

@@ -12,18 +12,21 @@ typedef $Note = ({
   int id,
   String title,
   String content,
-  $User user,
   DateTime createdAt,
   DateTime updatedAt,
+  $User? user,
 });
+
+enum Role {
+  admin,
+  user,
+}
 
 @superTypeWithJson
 typedef $User = ({
   int id,
   String name,
   String email,
-  String password,
+  Role role,
+  Partial<({String foo, int bar})>? baz,
 });
-
-@superTypeWithJson
-typedef $UpdateNoteDto = Pick<$Note, ({Partial title, Partial content})>;

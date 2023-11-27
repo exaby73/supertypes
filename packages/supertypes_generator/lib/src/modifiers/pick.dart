@@ -22,9 +22,9 @@ void applyPick(
 
       final pickField = picks.positionalFields[i];
       if (pickField.type.element?.name == 'Required') {
-        positionalFields[i].isNullable = false;
+        positionalFields[i].nullabilityOverride = false;
       } else if (pickField.type.element?.name == 'Partial') {
-        positionalFields[i].isNullable = true;
+        positionalFields[i].nullabilityOverride = true;
       } else if (pickField.type.element?.name != 'Pick') {
         def.fields.removeAt(i);
       }
@@ -50,12 +50,12 @@ void applyPick(
         namedFields[i],
         picks.namedFields[pickIndex],
       )) {
-        namedFields[i].isNullable = false;
+        namedFields[i].nullabilityOverride = false;
       } else if (_shouldPickPartial(
         namedFields[i],
         picks.namedFields[pickIndex],
       )) {
-        namedFields[i].isNullable = true;
+        namedFields[i].nullabilityOverride = true;
       }
     }
 

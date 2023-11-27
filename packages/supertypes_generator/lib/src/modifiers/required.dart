@@ -10,7 +10,7 @@ void applyRequired(
   if (children == null) {
     final def = generate(field.type, definition);
     for (final child in def.fields.toList()) {
-      child.isNullable = false;
+      child.nullabilityOverride = false;
     }
     return;
   }

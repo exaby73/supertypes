@@ -1,4 +1,3 @@
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:supertypes_generator/generator.dart';
 import 'package:supertypes_generator/src/field_definition.dart';
@@ -20,8 +19,6 @@ void applyMerge(
       def.fields.add(
         FieldDefinition(
           type: mergeRightPositional[i].type,
-          isNullable: mergeRightPositional[i].type.nullabilitySuffix ==
-              NullabilitySuffix.question,
         ),
       );
     }
@@ -35,8 +32,6 @@ void applyMerge(
       final fieldDefinition = FieldDefinition(
         name: rightElement.name,
         type: rightElement.type,
-        isNullable: mergeRightNamed[i].type.nullabilitySuffix ==
-            NullabilitySuffix.question,
       );
       if (index == -1) {
         def.fields.add(fieldDefinition);

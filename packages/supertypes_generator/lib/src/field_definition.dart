@@ -1,3 +1,5 @@
+import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:supertypes_generator/src/utils/records.dart';
 
@@ -5,26 +7,36 @@ class FieldDefinition {
   String? name;
   DartType type;
   Iterable<DartType>? restTypes;
-  bool isNullable;
+  bool? nullabilityOverride;
 
   Iterable<FieldDefinition>? children;
 
   FieldDefinition({
     this.name,
     required this.type,
+    this.nullabilityOverride,
     this.restTypes,
-    required this.isNullable,
     this.children,
   });
 
   bool get isPositional => name == null;
 
+  bool get isNullable =>
+      nullabilityOverride ??
+      type.nullabilitySuffix == NullabilitySuffix.question;
+
   String generate() {
     if (children == null) {
       final nullSuffix = isNullable ? '?' : '';
-      final type =
-          '${this.type.getDisplayString(withNullability: false)}$nullSuffix';
-      return isPositional ? type : '$type $name';
+      print(
+        '$name: ${type.getDisplayString(withNullability: false)}\n'
+        'with nullability ${type.nullabilitySuffix}\n'
+        'isNullable: $isNullable\n'
+        'nullSuffix: $nullSuffix',
+      );
+      final typeString =
+          '${type.getDisplayString(withNullability: false)}$nullSuffix';
+      return isPositional ? typeString : '$typeString $name';
     }
 
     final buffer = StringBuffer();
@@ -56,24 +68,83 @@ class FieldDefinition {
     assert(name != null, 'This field is not a named field');
     final buffer = StringBuffer();
     buffer.write("'${jsonMappedName ?? name}': ");
+    buffer.write('${_generateToJson(name!, type)},\n');
+    return buffer.toString();
+  }
+
+  String _generateToJson(String name, DartType type) {
+    final nullSuffix = isNullable ? '?' : '';
+
+    if (type.element is EnumElement) {
+      return '$name$nullSuffix.name';
+    }
+
+    if (!isCoreType(type) || type is RecordType) {
+      return '$name$nullSuffix.toJson()';
+    }
+
+    if (type.getDisplayString(withNullability: false) == 'DateTime') {
+      return '$name$nullSuffix.toIso8601String()';
+    }
+
+    return name;
+  }
+
+  String generateFromJsonForNamedFields(
+    String? jsonMappedName, [
+    List<String> jsonKeys = const [],
+  ]) {
+    assert(name != null, 'This field is not a named field');
+    final buffer = StringBuffer();
+
     if (children == null) {
-      buffer.write('${_generateToJson(name!, type)},\n');
+      buffer.write("$name: ${_generateFromJson(name!, type, jsonKeys)},\n");
       return buffer.toString();
     }
 
     return buffer.toString();
   }
 
-  String _generateToJson(String name, DartType type) {
-    if (!isCoreType(type) || type is RecordType) {
-      return '$name.toJson()';
+  String _generateFromJson(String name, DartType type, List<String> jsonKeys) {
+    final nullSuffix = isNullable ? '?' : '';
+    final nestedJson = jsonKeys.map((e) => "['$e']").join();
+    final jsonAccessor = "json$nestedJson['$name']";
+
+    if (type is RecordType) {
+      final buffer = StringBuffer();
+      final fields = getFieldDefinitionsFromRecord(type);
+      if (isNullable) {
+        buffer.write("$jsonAccessor == null ? null : ");
+      }
+      buffer.write('(');
+      for (final field in fields) {
+        buffer.writeln(
+          field.generateFromJsonForNamedFields(
+            name,
+            [
+              ...jsonKeys,
+              name,
+            ],
+          ),
+        );
+      }
+      buffer.write(')');
+      return buffer.toString();
     }
+
+    if (type.element is EnumElement) {
+      return "${type.getDisplayString(withNullability: false)}$nullSuffix.values"
+          ".firstWhere((e) => e.name == $jsonAccessor)";
+    }
+
     if (type.getDisplayString(withNullability: false) == 'DateTime') {
-      return '$name.toIso8601String()';
+      if (isNullable) {
+        return "$jsonAccessor == null ? null : DateTime.parse($jsonAccessor as String)";
+      } else {
+        return "DateTime.parse($jsonAccessor as String)";
+      }
     }
-    if (type.isDartCoreEnum) {
-      return '$name.name';
-    }
-    return name;
+
+    return "$jsonAccessor as ${type.getDisplayString(withNullability: false)}$nullSuffix";
   }
 }
