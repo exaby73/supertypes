@@ -7,6 +7,36 @@ part of 'note.dart';
 // SuperTypesGenerator
 // **************************************************************************
 
+/// Generate for [$User]
+typedef User = ({
+  String email,
+  int id,
+  String name,
+  Role? role,
+});
+
+User UserFromJson(Map<String, dynamic> json) {
+  return (
+    email: json['email'] as String,
+    id: json['id'] as int,
+    name: json['name'] as String,
+    role: json['role'] == null
+        ? null
+        : Role.values.firstWhere((e) => e.name == json['role']),
+  );
+}
+
+extension UserJson on User {
+  Map<String, dynamic> toJson() {
+    return {
+      'email': email,
+      'id': id,
+      'name': name,
+      'role': role?.name,
+    };
+  }
+}
+
 /// Generate for [$Note]
 typedef Note = ({
   String content,
@@ -15,11 +45,10 @@ typedef Note = ({
   String title,
   DateTime updatedAt,
   ({
-    Partial<({int bar, String foo})> baz,
     String email,
     int id,
     String name,
-    Role role
+    Role? role,
   })? user,
 });
 
@@ -30,14 +59,14 @@ Note NoteFromJson(Map<String, dynamic> json) {
     id: json['id'] as int,
     title: json['title'] as String,
     updatedAt: DateTime.parse(json['updatedAt'] as String),
-    user: json['user'] == null
-        ? null
-        : (
-            email: json['user']['email'] as String,
-            id: json['user']['id'] as int,
-            name: json['user']['name'] as String,
-            role: Role.values.firstWhere((e) => e.name == json['user']['role']),
-          ),
+    user: (
+      email: json['email'] as String,
+      id: json['id'] as int,
+      name: json['name'] as String,
+      role: json['role'] == null
+          ? null
+          : Role.values.firstWhere((e) => e.name == json['role']),
+    ),
   );
 }
 
@@ -50,39 +79,6 @@ extension NoteJson on Note {
       'title': title,
       'updated_at': updatedAt.toIso8601String(),
       'user': user?.toJson(),
-    };
-  }
-}
-
-/// Generate for [$User]
-typedef User = ({
-  ({
-    int? bar,
-    String? foo,
-  })? baz,
-  String email,
-  int id,
-  String name,
-  Role role,
-});
-
-User UserFromJson(Map<String, dynamic> json) {
-  return (
-    email: json['email'] as String,
-    id: json['id'] as int,
-    name: json['name'] as String,
-    role: Role.values.firstWhere((e) => e.name == json['role']),
-  );
-}
-
-extension UserJson on User {
-  Map<String, dynamic> toJson() {
-    return {
-      'baz': baz?.toJson(),
-      'email': email,
-      'id': id,
-      'name': name,
-      'role': role.name,
     };
   }
 }

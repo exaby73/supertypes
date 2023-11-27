@@ -18,11 +18,11 @@ Iterable<FieldDefinition> getFieldDefinitionsFromRecord(
 ]) sync* {
   for (final param in record.positionalFields) {
     final type = param.type;
-    if (type.isDartCoreRecord) {
+    if (type is RecordType) {
       yield FieldDefinition(
         type: type,
         children: getFieldDefinitionsFromRecord(
-          type as RecordType,
+          type,
           definition,
         ),
       );
@@ -38,12 +38,12 @@ Iterable<FieldDefinition> getFieldDefinitionsFromRecord(
 
   for (final param in record.namedFields) {
     final type = param.type;
-    if (type.isDartCoreRecord) {
+    if (type is RecordType) {
       yield FieldDefinition(
         name: param.name,
         type: type,
         children: getFieldDefinitionsFromRecord(
-          type as RecordType,
+          type,
           definition,
         ),
       );

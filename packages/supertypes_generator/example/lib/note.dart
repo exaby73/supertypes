@@ -2,6 +2,19 @@ import 'package:supertypes/supertypes.dart';
 
 part 'note.supertypes.dart';
 
+enum Role {
+  admin,
+  user,
+}
+
+@superTypeWithJson
+typedef $User = ({
+  int id,
+  String name,
+  String email,
+  Role? role,
+});
+
 @SuperType(
   jsonMapping: {
     'createdAt': 'created_at',
@@ -15,18 +28,4 @@ typedef $Note = ({
   DateTime createdAt,
   DateTime updatedAt,
   $User? user,
-});
-
-enum Role {
-  admin,
-  user,
-}
-
-@superTypeWithJson
-typedef $User = ({
-  int id,
-  String name,
-  String email,
-  Role role,
-  Partial<({String foo, int bar})>? baz,
 });

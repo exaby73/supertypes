@@ -28,12 +28,6 @@ class FieldDefinition {
   String generate() {
     if (children == null) {
       final nullSuffix = isNullable ? '?' : '';
-      print(
-        '$name: ${type.getDisplayString(withNullability: false)}\n'
-        'with nullability ${type.nullabilitySuffix}\n'
-        'isNullable: $isNullable\n'
-        'nullSuffix: $nullSuffix',
-      );
       final typeString =
           '${type.getDisplayString(withNullability: false)}$nullSuffix';
       return isPositional ? typeString : '$typeString $name';
@@ -102,6 +96,14 @@ class FieldDefinition {
       return buffer.toString();
     }
 
+    buffer.write("$name: (");
+    for (final child in children!) {
+      buffer.write(
+        child.generateFromJsonForNamedFields(jsonMappedName),
+      );
+    }
+    buffer.write("),\n");
+
     return buffer.toString();
   }
 
@@ -133,8 +135,13 @@ class FieldDefinition {
     }
 
     if (type.element is EnumElement) {
-      return "${type.getDisplayString(withNullability: false)}$nullSuffix.values"
-          ".firstWhere((e) => e.name == $jsonAccessor)";
+      if (isNullable) {
+        return "$jsonAccessor == null ? null : "
+            "${type.getDisplayString(withNullability: false)}.values.firstWhere((e) => "
+            "e.name == $jsonAccessor)";
+      }
+      return "${type.getDisplayString(withNullability: false)}.values.firstWhere((e) => "
+          "e.name == $jsonAccessor)";
     }
 
     if (type.getDisplayString(withNullability: false) == 'DateTime') {
