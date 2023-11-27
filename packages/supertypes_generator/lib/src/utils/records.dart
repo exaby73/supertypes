@@ -4,7 +4,7 @@ import 'package:supertypes_generator/generator.dart';
 import 'package:supertypes_generator/src/field_definition.dart';
 import 'package:supertypes_generator/src/super_type_definition.dart';
 
-bool _isCoreType(DartType type) {
+bool isCoreType(DartType type) {
   final element = type.element;
   if (element == null) return false;
   final uri = element.librarySource?.uri;
@@ -27,7 +27,7 @@ Iterable<FieldDefinition> getFieldDefinitionsFromRecord(
           definition,
         ),
       );
-    } else if (!_isCoreType(type) && type is InterfaceType) {
+    } else if (!isCoreType(type) && type is InterfaceType) {
       yield FieldDefinition(
         type: type,
         isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
@@ -53,7 +53,7 @@ Iterable<FieldDefinition> getFieldDefinitionsFromRecord(
           definition,
         ),
       );
-    } else if (!_isCoreType(type) && type is InterfaceType) {
+    } else if (!isCoreType(type) && type is InterfaceType) {
       yield FieldDefinition(
         name: param.name,
         type: type,

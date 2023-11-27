@@ -63,11 +63,14 @@ typedef _$Example = ();
 
 - [Modifier types](#modifier-types)
   - [Partial](#partial)
+  - [WithPartial](#withpartial)
   - [Required](#required)
+  - [WithRequired](#withrequired)
   - [Omit](#omit)
     - [Omitting positional fields](#omitting-positional-fields)
   - [Pick](#pick)
     - [Picking positional fields](#picking-positional-fields)
+  - [Merge](#merge)
 - [Using Supertypes within another Supertype](#using-supertypes-within-another-supertype)
 
 ## Modifier types
@@ -101,6 +104,37 @@ typedef UpdatePerson = ({
 });
 ```
 
+### WithPartial
+
+The `WithPartial` modifier type takes a type and a list of fields to make optional.
+
+```dart
+import 'package:supertypes/supertypes.dart';
+
+part 'person.supertypes.dart';
+
+typedef Person = ({
+  int id,
+  String firstName,
+  String lastName,
+  int age,
+});
+
+// We want to make `id` nullable
+@superType
+typedef $PersonWithNullableId = WithPartial<Person, ({Partial id})>;
+
+// This generates:
+
+/// Generate for [$PersonWithNullableId]
+typedef PersonWithNullableId = ({
+  int? id,
+  String firstName,
+  String lastName,
+  int age,
+});
+```
+
 ### Required
 
 The `Required` modifier type takes a type and makes all of it's fields required.
@@ -125,6 +159,33 @@ typedef $CreatePerson = Required<Person>;
 
 // This generates:
 typedef CreatePerson = ({
+  String firstName,
+  String lastName,
+  int age,
+});
+```
+
+### WithRequired
+
+The `WithRequired` modifier type takes a type and a list of fields to make required.
+
+```dart
+import 'package:supertypes/supertypes.dart';
+
+part 'person.supertypes.dart';
+
+typedef Person = ({
+  String firstName,
+  String? lastName,
+  int age,
+});
+
+// We want to make `lastName` required
+@superType
+typedef $PersonWithRequiredLastName = WithRequired<Person, ({Required lastName})>;
+
+// This generates:
+typedef PersonWithRequiredLastName = ({
   String firstName,
   String lastName,
   int age,
@@ -261,6 +322,44 @@ typedef Name = (String,);
 
 /// Generate for [$Age]
 typedef Age = (int,);
+```
+
+### Merge
+
+The `Merge` modifier type takes two types and merges them into one type.
+
+```dart
+import 'package:supertypes/supertypes.dart';
+
+part 'person.supertypes.dart';
+
+typedef Person = ({
+  String firstName,
+  String lastName,
+  int age,
+});
+
+typedef Address = ({
+  String street,
+  String city,
+  String country,
+});
+
+// We want to merge the two types
+@superType
+typedef $PersonWithAddress = Merge<Person, Address>;
+
+// This generates:
+
+/// Generate for [$PersonWithAddress]
+typedef PersonWithAddress = ({
+  String firstName,
+  String lastName,
+  int age,
+  String street,
+  String city,
+  String country,
+});
 ```
 
 # Using Supertypes within another Supertype

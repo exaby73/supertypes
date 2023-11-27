@@ -4,6 +4,7 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:supertypes/supertypes.dart';
+import 'package:supertypes_generator/src/checkers.dart';
 import 'package:supertypes_generator/src/field_definition.dart';
 import 'package:supertypes_generator/src/modifiers/merge.dart';
 import 'package:supertypes_generator/src/modifiers/omit.dart';
@@ -48,7 +49,12 @@ class SuperTypesGenerator extends GeneratorForAnnotation<SuperType> {
       final type = element.aliasedType;
       final def = generate(type);
 
-      yield _generateFinalCode(def);
+      final jsonMapping = getJsonMapping(element);
+      yield _generateFinalCode(
+        def,
+        name: generatedName,
+        jsonMapping: jsonMapping,
+      );
     } catch (e, s) {
       if (e is InvalidGenerationSourceError) rethrow;
       print('Error: $e');
@@ -99,7 +105,12 @@ SuperTypeDefinition generate(
   return def;
 }
 
-String _generateFinalCode(SuperTypeDefinition def) {
+String _generateFinalCode(
+  SuperTypeDefinition def, {
+  required String name,
+  required Map<String, String>? jsonMapping,
+}) {
+  final hasJson = jsonMapping != null;
   final buffer = StringBuffer();
   final SuperTypeDefinition(:positionalFields, :namedFields) = def;
 
@@ -118,6 +129,21 @@ String _generateFinalCode(SuperTypeDefinition def) {
   }
 
   buffer.write(');');
+
+  if (namedFields.isNotEmpty && hasJson) {
+    buffer.write('\n');
+    buffer.writeln('extension ${name}Json on $name {');
+    
+    buffer.writeln('Map<String, dynamic> toJson() {\nreturn {');
+    
+    for (final field in namedFields) {
+      buffer.writeln(field.generateToJsonForNamedFields(jsonMapping[field.name]));
+    }
+    
+    buffer.writeln('};\n}');
+    
+    buffer.write('}');
+  }
 
   return buffer.toString();
 }

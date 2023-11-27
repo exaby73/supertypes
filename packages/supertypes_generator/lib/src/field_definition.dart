@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/type.dart';
+import 'package:supertypes_generator/src/utils/records.dart';
 
 class FieldDefinition {
   String? name;
@@ -49,5 +50,30 @@ class FieldDefinition {
     }
 
     return isPositional ? buffer.toString() : '$buffer $name';
+  }
+
+  String generateToJsonForNamedFields(String? jsonMappedName) {
+    assert(name != null, 'This field is not a named field');
+    final buffer = StringBuffer();
+    buffer.write("'${jsonMappedName ?? name}': ");
+    if (children == null) {
+      buffer.write('${_generateToJson(name!, type)},\n');
+      return buffer.toString();
+    }
+
+    return buffer.toString();
+  }
+
+  String _generateToJson(String name, DartType type) {
+    if (!isCoreType(type) || type is RecordType) {
+      return '$name.toJson()';
+    }
+    if (type.getDisplayString(withNullability: false) == 'DateTime') {
+      return '$name.toIso8601String()';
+    }
+    if (type.isDartCoreEnum) {
+      return '$name.name';
+    }
+    return name;
   }
 }

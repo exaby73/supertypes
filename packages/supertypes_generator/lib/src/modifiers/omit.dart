@@ -32,9 +32,10 @@ void applyOmit(
       }
       final omitField = omits.namedFields[i];
       if (omitField.type.element?.name == 'Omit') {
-        def.fields.removeAt(
-          def.fields.indexWhere((element) => element.name == omitField.name),
-        );
+        final index =
+            def.fields.indexWhere((element) => element.name == omitField.name);
+        if (index != -1) continue;
+        def.fields.removeAt(index);
       }
     }
 
