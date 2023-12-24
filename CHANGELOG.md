@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-12-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`supertypes_generator` - `v0.0.6`](#supertypes_generator---v006)
+
+---
+
+#### `supertypes_generator` - `v0.0.6`
+
+ - **FEAT**: partial support for FromJson.
+
+
 ## 2023-11-27
 
 ### Changes

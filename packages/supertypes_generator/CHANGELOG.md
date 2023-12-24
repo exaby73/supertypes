@@ -1,3 +1,7 @@
+## 0.0.6
+
+ - **FEAT**: partial support for FromJson.
+
 ## 0.0.5
 
  - **FEAT**: add support for toJson.
