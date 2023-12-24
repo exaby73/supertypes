@@ -2,30 +2,24 @@ import 'package:supertypes/supertypes.dart';
 
 part 'note.supertypes.dart';
 
-enum Role {
-  admin,
-  user,
-}
+@superTypeWithJson
+typedef $Foo = ({String foo});
 
 @superTypeWithJson
-typedef $User = ({
-  int id,
-  String name,
-  String email,
-  Role? role,
-});
+typedef $Bar = ({int bar, $Foo foo});
 
-@SuperType(
-  jsonMapping: {
-    'createdAt': 'created_at',
-    'updatedAt': 'updated_at',
-  },
-)
+@superTypeWithJson
 typedef $Note = ({
   int id,
   String title,
   String content,
+  List<$Bar> statuses,
   DateTime createdAt,
-  DateTime updatedAt,
-  $User? user,
 });
+
+@superTypeWithJson
+typedef $NewNote = Pick<$Note, ({Pick title, Pick content})>;
+
+@superTypeWithJson
+typedef $UpdateNote
+    = Omit<WithRequired<Partial<$Note>, ({Required id})>, ({Omit createdAt})>;

@@ -34,7 +34,7 @@ void applyOmit(
       if (omitField.type.element?.name == 'Omit') {
         final index =
             def.fields.indexWhere((element) => element.name == omitField.name);
-        if (index != -1) continue;
+        if (index == -1) continue;
         def.fields.removeAt(index);
       }
     }

@@ -116,13 +116,13 @@ String _generateFinalCode(
   buffer.write('(');
 
   for (final field in positionalFields) {
-    buffer.write('${field.generate()},');
+    buffer.write('${field.generateCode()},');
   }
 
   if (namedFields.isNotEmpty) {
     buffer.write('{');
     for (final field in namedFields) {
-      buffer.write('${field.generate()},');
+      buffer.write('${field.generateCode()},');
     }
     buffer.write('}');
   }
@@ -163,10 +163,8 @@ String _generateFinalCode(
       );
     }
 
-    buffer.writeln('};\n}');
+    buffer.writeln('};\n}\n}');
   }
-
-  buffer.write('}');
 
   return buffer.toString();
 }

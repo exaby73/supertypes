@@ -7,32 +7,43 @@ part of 'note.dart';
 // SuperTypesGenerator
 // **************************************************************************
 
-/// Generate for [$User]
-typedef User = ({
-  String email,
-  int id,
-  String name,
-  Role? role,
+/// Generate for [$Foo]
+typedef Foo = ({
+  String foo,
 });
 
-User UserFromJson(Map<String, dynamic> json) {
+Foo FooFromJson(Map<String, dynamic> json) {
+  return (foo: json['foo'] as String,);
+}
+
+extension FooJson on Foo {
+  Map<String, dynamic> toJson() {
+    return {
+      'foo': foo,
+    };
+  }
+}
+
+/// Generate for [$Bar]
+typedef Bar = ({
+  int bar,
+  ({
+    String foo,
+  }) foo,
+});
+
+Bar BarFromJson(Map<String, dynamic> json) {
   return (
-    email: json['email'] as String,
-    id: json['id'] as int,
-    name: json['name'] as String,
-    role: json['role'] == null
-        ? null
-        : Role.values.firstWhere((e) => e.name == json['role']),
+    bar: json['bar'] as int,
+    foo: (foo: json['foo'] as String,),
   );
 }
 
-extension UserJson on User {
+extension BarJson on Bar {
   Map<String, dynamic> toJson() {
     return {
-      'email': email,
-      'id': id,
-      'name': name,
-      'role': role?.name,
+      'bar': bar,
+      'foo': foo.toJson(),
     };
   }
 }
@@ -42,14 +53,8 @@ typedef Note = ({
   String content,
   DateTime createdAt,
   int id,
+  List<({int bar, ({String foo}) foo})> statuses,
   String title,
-  DateTime updatedAt,
-  ({
-    String email,
-    int id,
-    String name,
-    Role? role,
-  })? user,
 });
 
 Note NoteFromJson(Map<String, dynamic> json) {
@@ -57,16 +62,15 @@ Note NoteFromJson(Map<String, dynamic> json) {
     content: json['content'] as String,
     createdAt: DateTime.parse(json['createdAt'] as String),
     id: json['id'] as int,
+    statuses: (json['statuses'] as List)
+        .map(
+          (e) => (
+            bar: json['bar'] as int,
+            foo: (foo: json['foo'] as String,),
+          ),
+        )
+        .toList(),
     title: json['title'] as String,
-    updatedAt: DateTime.parse(json['updatedAt'] as String),
-    user: (
-      email: json['email'] as String,
-      id: json['id'] as int,
-      name: json['name'] as String,
-      role: json['role'] == null
-          ? null
-          : Role.values.firstWhere((e) => e.name == json['role']),
-    ),
   );
 }
 
@@ -74,11 +78,69 @@ extension NoteJson on Note {
   Map<String, dynamic> toJson() {
     return {
       'content': content,
-      'created_at': createdAt.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
       'id': id,
+      'statuses': statuses,
       'title': title,
-      'updated_at': updatedAt.toIso8601String(),
-      'user': user?.toJson(),
+    };
+  }
+}
+
+/// Generate for [$NewNote]
+typedef NewNote = ({
+  String content,
+  String title,
+});
+
+NewNote NewNoteFromJson(Map<String, dynamic> json) {
+  return (
+    content: json['content'] as String,
+    title: json['title'] as String,
+  );
+}
+
+extension NewNoteJson on NewNote {
+  Map<String, dynamic> toJson() {
+    return {
+      'content': content,
+      'title': title,
+    };
+  }
+}
+
+/// Generate for [$UpdateNote]
+typedef UpdateNote = ({
+  String? content,
+  int id,
+  List<({int bar, ({String foo}) foo})>? statuses,
+  String? title,
+});
+
+UpdateNote UpdateNoteFromJson(Map<String, dynamic> json) {
+  return (
+    content: json['content'] as String?,
+    id: json['id'] as int,
+    statuses: json['statuses'] == null
+        ? null
+        : (json['statuses'] as List)
+            .map(
+              (e) => (
+                bar: json['bar'] as int,
+                foo: (foo: json['foo'] as String,),
+              ),
+            )
+            .toList(),
+    title: json['title'] as String?,
+  );
+}
+
+extension UpdateNoteJson on UpdateNote {
+  Map<String, dynamic> toJson() {
+    return {
+      'content': content,
+      'id': id,
+      'statuses': statuses,
+      'title': title,
     };
   }
 }
