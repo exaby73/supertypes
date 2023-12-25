@@ -65,8 +65,8 @@ Note NoteFromJson(Map<String, dynamic> json) {
     statuses: (json['statuses'] as List)
         .map(
           (e) => (
-            bar: json['bar'] as int,
-            foo: (foo: json['foo'] as String,),
+            bar: json['e'] as int,
+            foo: (foo: json['e'] as String,),
           ),
         )
         .toList(),
@@ -125,8 +125,8 @@ UpdateNote UpdateNoteFromJson(Map<String, dynamic> json) {
         : (json['statuses'] as List)
             .map(
               (e) => (
-                bar: json['bar'] as int,
-                foo: (foo: json['foo'] as String,),
+                bar: json['e'] as int,
+                foo: (foo: json['e'] as String,),
               ),
             )
             .toList(),

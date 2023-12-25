@@ -93,7 +93,7 @@ class FieldDefinition {
     final buffer = StringBuffer();
 
     if (children == null) {
-      buffer.write("$name: ${_generateFromJson(name!, type, jsonKeys)},\n");
+      buffer.write("$name: ${_generateFromJson(jsonMappedName ?? name!, type, jsonKeys)},\n");
       return buffer.toString();
     }
 
