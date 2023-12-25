@@ -1,3 +1,7 @@
+## 0.0.6+1
+
+ - **FIX**: json map name not being respected for fromJson generation.
+
 ## 0.0.6
 
  - **FEAT**: partial support for FromJson.

@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`supertypes_generator` - `v0.0.6+1`](#supertypes_generator---v0061)
+
+---
+
+#### `supertypes_generator` - `v0.0.6+1`
+
+ - **FIX**: json map name not being respected for fromJson generation.
+
+
+## 2023-12-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`supertypes_generator` - `v0.0.6`](#supertypes_generator---v006)
 
 ---
