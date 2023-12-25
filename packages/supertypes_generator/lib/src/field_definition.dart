@@ -93,7 +93,8 @@ class FieldDefinition {
     final buffer = StringBuffer();
 
     if (children == null) {
-      buffer.write("$name: ${_generateFromJson(jsonMappedName ?? name!, type, jsonKeys)},\n");
+      buffer.write(
+          "$name: ${_generateFromJson(jsonMappedName ?? name!, type, jsonKeys)},\n");
       return buffer.toString();
     }
 
@@ -162,9 +163,10 @@ class FieldDefinition {
 
     if (type.getDisplayString(withNullability: false) == 'DateTime') {
       if (nullSuffix.isNotEmpty) {
-        return "$jsonAccessor == null ? null : DateTime.parse($jsonAccessor as String)";
+        return "$jsonAccessor == null ? null : "
+            "$jsonAccessor is DateTime ? $jsonAccessor as DateTime : DateTime.parse($jsonAccessor as String)";
       } else {
-        return "DateTime.parse($jsonAccessor as String)";
+        return "$jsonAccessor is DateTime ? $jsonAccessor as DateTime : DateTime.parse($jsonAccessor as String)";
       }
     }
 
